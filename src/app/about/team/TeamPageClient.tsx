@@ -59,7 +59,8 @@ const defaultMembers: TeamMember[] = [
 ];
 
 export default function TeamPageClient({ members }: TeamPageClientProps) {
-  const teamMembers = members.length > 0 ? members : defaultMembers;
+  // Use Sanity data or fallback to defaults - check for valid data with names
+  const teamMembers = (members.length > 0 && members[0]?.name) ? members : defaultMembers;
 
   return (
     <section className="py-20">

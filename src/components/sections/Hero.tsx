@@ -33,12 +33,12 @@ const defaults = {
 export default function Hero({ data }: HeroProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  // Use Sanity data or fallback to defaults
-  const badge = data?.badge || defaults.badge;
-  const headline = data?.headline || defaults.headline;
-  const subheadline = data?.subheadline || defaults.subheadline;
-  const videoUrl = data?.videoUrl || defaults.videoUrl;
-  const ctas = data?.ctas?.length ? data.ctas : defaults.ctas;
+  // Use Sanity data or fallback to defaults - check each field individually
+  const badge = (data?.badge && data.badge.trim()) || defaults.badge;
+  const headline = (data?.headline && data.headline.trim()) || defaults.headline;
+  const subheadline = (data?.subheadline && data.subheadline.trim()) || defaults.subheadline;
+  const videoUrl = (data?.videoUrl && data.videoUrl.trim()) || defaults.videoUrl;
+  const ctas = (data?.ctas && data.ctas.length > 0 && data.ctas[0]?.text) ? data.ctas : defaults.ctas;
 
   return (
     <>

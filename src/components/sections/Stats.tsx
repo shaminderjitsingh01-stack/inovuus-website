@@ -21,8 +21,8 @@ const defaultStats: Stat[] = [
 ];
 
 export default function Stats({ stats }: StatsProps) {
-  // Use Sanity data or fallback to defaults
-  const statList = stats?.length ? stats : defaultStats;
+  // Use Sanity data or fallback to defaults - check for valid data with values
+  const statList = (stats?.length && stats[0]?.value) ? stats : defaultStats;
 
   return (
     <section className="py-16 bg-brand-navy border-y border-brand-slate/30">

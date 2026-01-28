@@ -44,8 +44,8 @@ const defaultTestimonials: Testimonial[] = [
 ];
 
 export default function Testimonials({ testimonials }: TestimonialsProps) {
-  // Use Sanity data or fallback to defaults
-  const testimonialList = testimonials?.length ? testimonials : defaultTestimonials;
+  // Use Sanity data or fallback to defaults - check for valid data with quotes
+  const testimonialList = (testimonials?.length && testimonials[0]?.quote) ? testimonials : defaultTestimonials;
 
   return (
     <section className="py-20 bg-brand-dark">

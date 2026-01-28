@@ -99,7 +99,7 @@ interface LeadData {
 export default function ResilienceQuiz({ quizData, resultsData }: ResilienceQuizProps) {
   // Convert Sanity data to component format or use defaults
   const quizQuestions = useMemo<Question[]>(() => {
-    if (quizData?.questions?.length) {
+    if (quizData?.questions?.length && quizData.questions[0]?.questionText) {
       return quizData.questions.map((q, index) => ({
         id: index + 1,
         text: q.questionText,

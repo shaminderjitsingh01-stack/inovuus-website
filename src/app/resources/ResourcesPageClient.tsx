@@ -61,7 +61,8 @@ const iconMap: Record<string, typeof FileText> = {
 const categories = ["All", "Whitepapers", "Guides", "Webinars", "Case Studies"];
 
 export default function ResourcesPageClient({ resources }: ResourcesPageClientProps) {
-  const resourceList = resources.length > 0 ? resources : defaultResources;
+  // Use Sanity data or fallback to defaults - check for valid data with titles
+  const resourceList = (resources.length > 0 && resources[0]?.title) ? resources : defaultResources;
   const featuredResource = resourceList.find(r => r.featured) || resourceList[0];
   const otherResources = resourceList.filter(r => r._id !== featuredResource?._id);
 

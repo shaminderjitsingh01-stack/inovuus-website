@@ -41,7 +41,7 @@ function getResultTier(score: number, maxScore: number, resultsData?: SanityQuiz
   const percentage = (score / maxScore) * 100;
 
   // Try to find matching result from Sanity data
-  if (resultsData?.length) {
+  if (resultsData?.length && resultsData[0]?.tier) {
     const matchingResult = resultsData.find(
       r => percentage >= r.minScore && percentage <= r.maxScore
     );

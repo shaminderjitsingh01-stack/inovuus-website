@@ -93,8 +93,8 @@ export default function TrustBar({ partners }: TrustBarProps) {
     },
   };
 
-  // Use Sanity data if available, otherwise use default SVG logos
-  const hasPartnerLogos = partners && partners.length > 0 && partners.some(p => p.logo);
+  // Use Sanity data if available with valid logos, otherwise use default SVG logos
+  const hasPartnerLogos = partners && partners.length > 0 && partners.some(p => p.logo && p.logo.trim() !== '') && partners.some(p => p.name && p.name.trim() !== '');
 
   return (
     <section ref={ref} className="relative py-16 bg-brand-dark border-y border-brand-navy/50">

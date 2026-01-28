@@ -74,7 +74,8 @@ function formatDate(dateString: string): string {
 }
 
 export default function BlogPageClient({ posts }: BlogPageClientProps) {
-  const blogPosts = posts.length > 0 ? posts : defaultPosts;
+  // Use Sanity data or fallback to defaults - check for valid data with titles
+  const blogPosts = (posts.length > 0 && posts[0]?.title) ? posts : defaultPosts;
   const featuredPosts = blogPosts.slice(0, 3);
 
   return (

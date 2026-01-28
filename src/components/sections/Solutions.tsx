@@ -63,8 +63,8 @@ const cardVariants = {
 };
 
 export default function Solutions({ solutions }: SolutionsProps) {
-  // Use Sanity data or fallback to defaults
-  const solutionList = solutions?.length ? solutions : defaultSolutions;
+  // Use Sanity data or fallback to defaults - check for valid data with titles
+  const solutionList = (solutions?.length && solutions[0]?.title) ? solutions : defaultSolutions;
 
   return (
     <section className="section-padding bg-brand-dark">
