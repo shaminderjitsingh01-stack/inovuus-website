@@ -210,6 +210,33 @@ export const siteSettings = defineType({
       ],
     }),
     defineField({
+      name: 'stats',
+      title: 'Homepage Stats',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'value',
+              title: 'Value',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+              description: 'e.g., 500+, 99.9%, <4hrs',
+            }),
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+              description: 'e.g., Clients Protected, Uptime Guarantee',
+            }),
+          ],
+        },
+      ],
+      validation: (Rule) => Rule.max(4),
+    }),
+    defineField({
       name: 'footer',
       title: 'Footer Settings',
       type: 'object',

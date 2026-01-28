@@ -3,8 +3,20 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import Image from 'next/image';
 
-// SVG Logo Components
+interface Partner {
+  _id?: string;
+  name: string;
+  logo?: string;
+  website?: string;
+}
+
+interface TrustBarProps {
+  partners?: Partner[];
+}
+
+// SVG Logo Components (fallback)
 const DruvaLogo = () => (
   <svg viewBox="0 0 120 30" className="h-8 w-auto" fill="currentColor">
     <text x="0" y="22" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" fill="#64FFDA">
@@ -47,14 +59,14 @@ const VMwareLogo = () => (
   </svg>
 );
 
-const partners = [
+const defaultPartners = [
   { name: 'Druva', Logo: DruvaLogo },
   { name: 'AWS', Logo: AWSLogo },
   { name: 'Microsoft', Logo: MicrosoftLogo },
   { name: 'VMware', Logo: VMwareLogo },
 ];
 
-export default function TrustBar() {
+export default function TrustBar({ partners }: TrustBarProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -81,9 +93,11 @@ export default function TrustBar() {
     },
   };
 
+  // Use Sanity data if available, otherwise use default SVG logos
+  const hasPartnerLogos = partners && partners.length > 0 && partners.some(p => p.logo);
+
   return (
     <section ref={ref} className="relative py-16 bg-brand-dark border-y border-brand-navy/50">
-      {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-navy/20 to-transparent" />
 
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
@@ -104,25 +118,56 @@ export default function TrustBar() {
             variants={containerVariants}
             className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16"
           >
-            {partners.map((partner) => (
-              <motion.div
-                key={partner.name}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05, y: -2 }}
-                transition={{ duration: 0.2 }}
-                className="group relative"
-              >
-                <div className="relative px-6 py-4 rounded-xl bg-brand-navy/30 border border-brand-slate/20 hover:border-brand-accent/30 transition-all duration-300 hover:shadow-lg hover:shadow-brand-accent/10">
-                  {/* Logo */}
-                  <div className="opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                    <partner.Logo />
+            {hasPartnerLogos ? (
+              // Render Sanity partner logos
+              partners!.map((partner) => (
+                <motion.div
+                  key={partner._id || partner.name}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                  className="group relative"
+                >
+                  <a
+                    href={partner.website || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative px-6 py-4 rounded-xl bg-brand-navy/30 border border-brand-slate/20 hover:border-brand-accent/30 transition-all duration-300 hover:shadow-lg hover:shadow-brand-accent/10 block"
+                  >
+                    {partner.logo ? (
+                      <Image
+                        src={partner.logo}
+                        alt={partner.name}
+                        width={120}
+                        height={40}
+                        className="opacity-70 group-hover:opacity-100 transition-opacity duration-300 object-contain"
+                      />
+                    ) : (
+                      <span className="text-white font-semibold">{partner.name}</span>
+                    )}
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  </a>
+                </motion.div>
+              ))
+            ) : (
+              // Render default SVG logos
+              defaultPartners.map((partner) => (
+                <motion.div
+                  key={partner.name}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ duration: 0.2 }}
+                  className="group relative"
+                >
+                  <div className="relative px-6 py-4 rounded-xl bg-brand-navy/30 border border-brand-slate/20 hover:border-brand-accent/30 transition-all duration-300 hover:shadow-lg hover:shadow-brand-accent/10">
+                    <div className="opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                      <partner.Logo />
+                    </div>
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   </div>
-
-                  {/* Subtle shine effect on hover */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </motion.div>
       </div>

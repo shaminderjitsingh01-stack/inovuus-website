@@ -3,19 +3,32 @@
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui";
 
-const stats = [
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface StatsProps {
+  stats?: Stat[];
+}
+
+// Default stats (fallback)
+const defaultStats: Stat[] = [
   { value: "25+", label: "Years Experience" },
   { value: "500+", label: "Clients Protected" },
   { value: "99.9%", label: "Uptime Guarantee" },
   { value: "<4hrs", label: "Recovery Time" },
 ];
 
-export default function Stats() {
+export default function Stats({ stats }: StatsProps) {
+  // Use Sanity data or fallback to defaults
+  const statList = stats?.length ? stats : defaultStats;
+
   return (
     <section className="py-16 bg-brand-navy border-y border-brand-slate/30">
       <Container>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+          {statList.map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}

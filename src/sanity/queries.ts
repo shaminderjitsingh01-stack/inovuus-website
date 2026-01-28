@@ -425,7 +425,8 @@ export const siteSettingsQuery = groq`
       "ogImage": ogImage.asset->url
     },
     analytics,
-    footer
+    footer,
+    stats
   }
 `
 

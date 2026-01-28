@@ -1,39 +1,53 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Cloud, FileCheck, ArrowRight } from "lucide-react";
+import { Shield, Cloud, FileCheck, Server, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-interface SolutionCard {
-  icon: React.ReactNode;
+interface Solution {
+  _id?: string;
   title: string;
-  description: string;
-  href: string;
+  slug?: string;
+  shortDescription: string;
+  icon?: string;
+  image?: string;
 }
 
-const solutions: SolutionCard[] = [
+interface SolutionsProps {
+  solutions?: Solution[];
+}
+
+// Default solutions (fallback)
+const defaultSolutions: Solution[] = [
   {
-    icon: <Shield className="w-12 h-12" />,
+    _id: "1",
     title: "Cyber Resilience",
-    description:
-      "Automated ransomware detection and one-click clean recovery",
-    href: "/solutions/cyber-resilience",
+    slug: "cyber-resilience",
+    shortDescription: "Automated ransomware detection and one-click clean recovery",
+    icon: "shield",
   },
   {
-    icon: <Cloud className="w-12 h-12" />,
+    _id: "2",
     title: "Cloud Modernization",
-    description:
-      "Retire your hardware. Move your data center and endpoint backups to the Cloud seamlessly",
-    href: "/solutions/cloud-backup",
+    slug: "cloud-backup",
+    shortDescription: "Retire your hardware. Move your data center and endpoint backups to the Cloud seamlessly",
+    icon: "cloud",
   },
   {
-    icon: <FileCheck className="w-12 h-12" />,
+    _id: "3",
     title: "Compliance & Governance",
-    description:
-      "Meet GDPR and local regulations with automated eDiscovery and data residency",
-    href: "/solutions/compliance",
+    slug: "compliance",
+    shortDescription: "Meet GDPR and local regulations with automated eDiscovery and data residency",
+    icon: "file-check",
   },
 ];
+
+const iconMap: Record<string, React.ReactNode> = {
+  shield: <Shield className="w-12 h-12" />,
+  cloud: <Cloud className="w-12 h-12" />,
+  "file-check": <FileCheck className="w-12 h-12" />,
+  server: <Server className="w-12 h-12" />,
+};
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -48,7 +62,10 @@ const cardVariants = {
   }),
 };
 
-export default function Solutions() {
+export default function Solutions({ solutions }: SolutionsProps) {
+  // Use Sanity data or fallback to defaults
+  const solutionList = solutions?.length ? solutions : defaultSolutions;
+
   return (
     <section className="section-padding bg-brand-dark">
       <div className="max-w-7xl mx-auto">
@@ -71,16 +88,19 @@ export default function Solutions() {
 
         {/* Solution Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {solutions.map((solution, index) => (
+          {solutionList.map((solution, index) => (
             <motion.div
-              key={solution.title}
+              key={solution._id || solution.title}
               custom={index}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={cardVariants}
             >
-              <Link href={solution.href} className="block group h-full">
+              <Link
+                href={`/solutions/${solution.slug || solution.title.toLowerCase().replace(/\s+/g, '-')}`}
+                className="block group h-full"
+              >
                 <div
                   className="relative h-full bg-brand-navy border border-brand-slate/30 rounded-xl p-8
                              transition-all duration-300 ease-out
@@ -92,7 +112,9 @@ export default function Solutions() {
                     className="mb-6 text-brand-accent transition-transform duration-300
                                group-hover:scale-110"
                   >
-                    {solution.icon}
+                    {solution.icon && iconMap[solution.icon]
+                      ? iconMap[solution.icon]
+                      : <Shield className="w-12 h-12" />}
                   </div>
 
                   {/* Title */}
@@ -102,7 +124,7 @@ export default function Solutions() {
 
                   {/* Description */}
                   <p className="text-brand-text leading-relaxed mb-6">
-                    {solution.description}
+                    {solution.shortDescription}
                   </p>
 
                   {/* Learn More Link */}

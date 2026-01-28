@@ -3,29 +3,50 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 import { Container, SectionHeading, Card } from "@/components/ui";
+import Image from "next/image";
 
-const testimonials = [
+interface Testimonial {
+  _id?: string;
+  quote: string;
+  authorName: string;
+  authorRole: string;
+  company: string;
+  authorImage?: string;
+}
+
+interface TestimonialsProps {
+  testimonials?: Testimonial[];
+}
+
+// Default testimonials (fallback)
+const defaultTestimonials: Testimonial[] = [
   {
+    _id: "1",
     quote: "iNovuus helped us recover 50TB of data in under 2 hours after a breach. Their cloud-native approach saved our business.",
-    author: "Michael Chen",
-    role: "CTO",
+    authorName: "Michael Chen",
+    authorRole: "CTO",
     company: "TechVentures Singapore",
   },
   {
+    _id: "2",
     quote: "Moving from legacy backup to Druva through iNovuus cut our TCO by 60% while dramatically improving our recovery times.",
-    author: "Sarah Lim",
-    role: "IT Director",
+    authorName: "Sarah Lim",
+    authorRole: "IT Director",
     company: "Pacific Holdings",
   },
   {
+    _id: "3",
     quote: "The ransomware resilience assessment opened our eyes to critical gaps. iNovuus's team guided us through every step of modernization.",
-    author: "David Tan",
-    role: "CISO",
+    authorName: "David Tan",
+    authorRole: "CISO",
     company: "FinServe Asia",
   },
 ];
 
-export default function Testimonials() {
+export default function Testimonials({ testimonials }: TestimonialsProps) {
+  // Use Sanity data or fallback to defaults
+  const testimonialList = testimonials?.length ? testimonials : defaultTestimonials;
+
   return (
     <section className="py-20 bg-brand-dark">
       <Container>
@@ -36,9 +57,9 @@ export default function Testimonials() {
         />
 
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {testimonialList.map((testimonial, index) => (
             <motion.div
-              key={index}
+              key={testimonial._id || index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -47,13 +68,24 @@ export default function Testimonials() {
               <Card className="h-full flex flex-col">
                 <Quote className="h-8 w-8 text-brand-accent mb-4" />
                 <p className="text-brand-text-light flex-grow mb-6">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
-                <div className="border-t border-brand-slate/30 pt-4">
-                  <p className="font-semibold text-white">{testimonial.author}</p>
-                  <p className="text-brand-text text-sm">
-                    {testimonial.role}, {testimonial.company}
-                  </p>
+                <div className="border-t border-brand-slate/30 pt-4 flex items-center gap-3">
+                  {testimonial.authorImage && (
+                    <Image
+                      src={testimonial.authorImage}
+                      alt={testimonial.authorName}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="font-semibold text-white">{testimonial.authorName}</p>
+                    <p className="text-brand-text text-sm">
+                      {testimonial.authorRole}, {testimonial.company}
+                    </p>
+                  </div>
                 </div>
               </Card>
             </motion.div>
