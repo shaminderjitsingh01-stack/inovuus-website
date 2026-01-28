@@ -127,7 +127,7 @@ export default function Hero({ data }: HeroProps) {
               </motion.div>
             </motion.div>
 
-            {/* Right Content - Futuristic Cyber Visualization */}
+            {/* Right Content - Data Shield Visualization */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -138,60 +138,70 @@ export default function Hero({ data }: HeroProps) {
                 {/* Ambient glow background */}
                 <motion.div
                   animate={{
-                    scale: [1, 1.1, 1],
-                    opacity: [0.2, 0.4, 0.2],
+                    scale: [1, 1.15, 1],
+                    opacity: [0.3, 0.5, 0.3],
                   }}
                   transition={{
                     duration: 4,
                     repeat: Infinity,
                     ease: 'easeInOut',
                   }}
-                  className="absolute inset-0 rounded-full bg-gradient-radial from-brand-accent/30 via-brand-blue/20 to-transparent blur-3xl"
+                  className="absolute inset-0 bg-gradient-radial from-brand-accent/40 via-brand-blue/20 to-transparent blur-3xl"
                 />
 
-                {/* Outer rotating ring 1 */}
+                {/* Outer hexagonal ring - rotating */}
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                  className="absolute inset-0"
+                  transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-0 flex items-center justify-center"
                 >
                   <svg viewBox="0 0 400 400" className="w-full h-full">
                     <defs>
-                      <linearGradient id="ringGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#64FFDA" stopOpacity="0.8" />
+                      <linearGradient id="hexGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#64FFDA" stopOpacity="0.6" />
                         <stop offset="50%" stopColor="#48C6EF" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#64FFDA" stopOpacity="0" />
+                        <stop offset="100%" stopColor="#64FFDA" stopOpacity="0.6" />
                       </linearGradient>
                     </defs>
-                    <circle cx="200" cy="200" r="190" fill="none" stroke="url(#ringGradient1)" strokeWidth="1" strokeDasharray="20 10 5 10" />
+                    <polygon
+                      points="200,20 360,110 360,290 200,380 40,290 40,110"
+                      fill="none"
+                      stroke="url(#hexGradient1)"
+                      strokeWidth="1"
+                      strokeDasharray="15 8"
+                    />
                   </svg>
                 </motion.div>
 
-                {/* Outer rotating ring 2 - counter direction */}
+                {/* Middle hexagonal ring - counter rotating */}
                 <motion.div
                   animate={{ rotate: -360 }}
-                  transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                  className="absolute inset-4"
+                  transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-8 flex items-center justify-center"
                 >
                   <svg viewBox="0 0 400 400" className="w-full h-full">
                     <defs>
-                      <linearGradient id="ringGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#48C6EF" stopOpacity="0.6" />
-                        <stop offset="50%" stopColor="#64FFDA" stopOpacity="0.2" />
-                        <stop offset="100%" stopColor="#48C6EF" stopOpacity="0" />
+                      <linearGradient id="hexGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#48C6EF" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#64FFDA" stopOpacity="0.5" />
                       </linearGradient>
                     </defs>
-                    <circle cx="200" cy="200" r="180" fill="none" stroke="url(#ringGradient2)" strokeWidth="2" strokeDasharray="40 20" />
+                    <polygon
+                      points="200,40 340,120 340,280 200,360 60,280 60,120"
+                      fill="none"
+                      stroke="url(#hexGradient2)"
+                      strokeWidth="2"
+                    />
                   </svg>
                 </motion.div>
 
-                {/* Pulsing rings */}
+                {/* Pulsing hexagonal waves */}
                 {[0, 1, 2].map((i) => (
                   <motion.div
-                    key={`pulse-${i}`}
+                    key={`hex-pulse-${i}`}
                     className="absolute inset-0 flex items-center justify-center"
-                    initial={{ scale: 0.5, opacity: 0.8 }}
-                    animate={{ scale: 1.2, opacity: 0 }}
+                    initial={{ scale: 0.6, opacity: 0.8 }}
+                    animate={{ scale: 1.3, opacity: 0 }}
                     transition={{
                       duration: 3,
                       repeat: Infinity,
@@ -199,75 +209,147 @@ export default function Hero({ data }: HeroProps) {
                       ease: 'easeOut',
                     }}
                   >
-                    <div className="w-48 h-48 rounded-full border border-brand-accent/50" />
+                    <svg viewBox="0 0 400 400" className="w-3/4 h-3/4">
+                      <polygon
+                        points="200,50 330,125 330,275 200,350 70,275 70,125"
+                        fill="none"
+                        stroke="#64FFDA"
+                        strokeWidth="1"
+                        opacity="0.5"
+                      />
+                    </svg>
                   </motion.div>
                 ))}
 
-                {/* Central floating data sphere */}
+                {/* Central Shield */}
                 <motion.div
-                  animate={{
-                    y: [0, -15, 0],
-                    rotateY: [0, 360],
-                  }}
-                  transition={{
-                    y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-                    rotateY: { duration: 20, repeat: Infinity, ease: 'linear' },
-                  }}
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   className="absolute inset-0 flex items-center justify-center"
-                  style={{ perspective: '1000px' }}
                 >
-                  <div className="relative w-32 h-32 md:w-40 md:h-40">
+                  <div className="relative">
+                    {/* Shield glow */}
                     <motion.div
-                      animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                      animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute inset-0 rounded-full bg-gradient-to-br from-brand-accent/40 to-brand-blue/40 blur-xl"
+                      className="absolute -inset-4 bg-gradient-to-b from-brand-accent/30 to-brand-blue/30 blur-2xl"
+                      style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                     />
-                    <div className="absolute inset-2 rounded-full bg-gradient-to-br from-brand-navy/80 via-brand-slate/60 to-brand-navy/80 border border-brand-accent/30 backdrop-blur-sm shadow-2xl shadow-brand-accent/20">
-                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-gradient-to-br from-white/20 to-transparent blur-sm" />
-                      {/* Grid lines on sphere */}
-                      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full opacity-30">
-                        <ellipse cx="50" cy="50" rx="40" ry="40" fill="none" stroke="#64FFDA" strokeWidth="0.5" />
-                        <ellipse cx="50" cy="50" rx="40" ry="20" fill="none" stroke="#64FFDA" strokeWidth="0.5" />
-                        <ellipse cx="50" cy="50" rx="20" ry="40" fill="none" stroke="#48C6EF" strokeWidth="0.5" />
-                        <line x1="10" y1="50" x2="90" y2="50" stroke="#64FFDA" strokeWidth="0.5" />
-                        <line x1="50" y1="10" x2="50" y2="90" stroke="#48C6EF" strokeWidth="0.5" />
-                      </svg>
-                    </div>
+
+                    {/* Main shield shape */}
+                    <svg viewBox="0 0 120 140" className="w-28 h-32 md:w-36 md:h-40 lg:w-44 lg:h-48">
+                      <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#112240" />
+                          <stop offset="50%" stopColor="#1E3A5F" />
+                          <stop offset="100%" stopColor="#112240" />
+                        </linearGradient>
+                        <linearGradient id="shieldStroke" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#64FFDA" />
+                          <stop offset="50%" stopColor="#48C6EF" />
+                          <stop offset="100%" stopColor="#64FFDA" />
+                        </linearGradient>
+                        <filter id="shieldGlow">
+                          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                          <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                          </feMerge>
+                        </filter>
+                      </defs>
+
+                      {/* Shield body */}
+                      <path
+                        d="M60 5 L110 25 L110 80 Q110 120 60 135 Q10 120 10 80 L10 25 Z"
+                        fill="url(#shieldGradient)"
+                        stroke="url(#shieldStroke)"
+                        strokeWidth="2"
+                        filter="url(#shieldGlow)"
+                      />
+
+                      {/* Inner hexagon pattern */}
+                      <path
+                        d="M60 25 L85 40 L85 70 L60 85 L35 70 L35 40 Z"
+                        fill="none"
+                        stroke="#64FFDA"
+                        strokeWidth="1"
+                        opacity="0.6"
+                      />
+
+                      {/* Center checkmark/lock icon */}
+                      <motion.path
+                        d="M45 55 L55 65 L75 45"
+                        fill="none"
+                        stroke="#64FFDA"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+                      />
+
+                      {/* Decorative lines */}
+                      <line x1="60" y1="90" x2="60" y2="120" stroke="#64FFDA" strokeWidth="1" opacity="0.4" />
+                      <line x1="30" y1="35" x2="20" y2="30" stroke="#48C6EF" strokeWidth="1" opacity="0.4" />
+                      <line x1="90" y1="35" x2="100" y2="30" stroke="#48C6EF" strokeWidth="1" opacity="0.4" />
+                    </svg>
                   </div>
                 </motion.div>
 
-                {/* Orbiting nodes */}
+                {/* Data stream particles */}
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={`particle-${i}`}
+                    className="absolute w-2 h-2 rounded-full"
+                    style={{
+                      background: i % 2 === 0 ? '#64FFDA' : '#48C6EF',
+                      boxShadow: i % 2 === 0 ? '0 0 10px #64FFDA' : '0 0 10px #48C6EF',
+                      left: '50%',
+                      top: '50%',
+                    }}
+                    animate={{
+                      x: [0, Math.cos((i * 30 * Math.PI) / 180) * 180],
+                      y: [0, Math.sin((i * 30 * Math.PI) / 180) * 180],
+                      opacity: [1, 0],
+                      scale: [1, 0.3],
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                      ease: 'easeOut',
+                    }}
+                  />
+                ))}
+
+                {/* Floating data nodes */}
                 {[0, 1, 2, 3, 4, 5].map((i) => (
                   <motion.div
-                    key={`orbit-${i}`}
-                    className="absolute inset-0"
-                    animate={{ rotate: 360 }}
+                    key={`node-${i}`}
+                    className="absolute"
+                    style={{
+                      top: `${20 + (i % 3) * 30}%`,
+                      left: `${i < 3 ? 5 : 85}%`,
+                    }}
+                    animate={{
+                      y: [0, -15, 0],
+                      opacity: [0.4, 1, 0.4],
+                    }}
                     transition={{
-                      duration: 8 + i * 2,
+                      duration: 3,
                       repeat: Infinity,
-                      ease: 'linear',
                       delay: i * 0.5,
+                      ease: 'easeInOut',
                     }}
                   >
+                    <div className={`w-3 h-3 rounded-full ${i % 2 === 0 ? 'bg-brand-accent' : 'bg-brand-blue'} shadow-lg`} />
+                    {/* Connection line to center */}
                     <motion.div
-                      className="absolute"
-                      style={{
-                        top: '50%',
-                        left: `${10 + i * 8}%`,
-                        transform: 'translateY(-50%)',
-                      }}
-                      animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.6, 1, 0.6],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.3,
-                      }}
-                    >
-                      <div className={`w-3 h-3 rounded-full ${i % 2 === 0 ? 'bg-brand-accent' : 'bg-brand-blue'} shadow-lg ${i % 2 === 0 ? 'shadow-brand-accent/50' : 'shadow-brand-blue/50'}`} />
-                    </motion.div>
+                      className={`absolute top-1/2 ${i < 3 ? 'left-full' : 'right-full'} h-px w-16 ${i % 2 === 0 ? 'bg-gradient-to-r' : 'bg-gradient-to-l'} from-brand-accent/50 to-transparent`}
+                      animate={{ opacity: [0.2, 0.6, 0.2] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                    />
                   </motion.div>
                 ))}
               </div>
