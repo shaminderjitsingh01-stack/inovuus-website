@@ -1,0 +1,9 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0A0F1C"/>
+  <rect x="40" y="40" width="1120" height="550" rx="20" stroke="#1E3A5F" stroke-width="2"/>
+  <text x="600" y="280" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="#FFFFFF">iNovuus Technologies</text>
+  <text x="600" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#64D9A6">Cyber Resilience & Data Protection</text>
+  <text x="600" y="420" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#B0B7C3">Singapore's Trusted Partner Since 2000</text>
+  <circle cx="600" cy="150" r="40" fill="#64D9A6" opacity="0.2"/>
+  <path d="M585 150 L595 160 L615 140" stroke="#64D9A6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
