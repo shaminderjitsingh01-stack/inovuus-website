@@ -108,11 +108,37 @@ export default function ResilienceQuiz() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call - replace with actual Sanity/API integration
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const score = calculateScore();
+    const percentage = Math.round((score / maxScore) * 100);
+    let resultTier = 'critical';
+    if (percentage >= 80) resultTier = 'resilient';
+    else if (percentage >= 40) resultTier = 'at-risk';
 
-    // In production, save lead data to Sanity or CRM
-    console.log('Lead captured:', leadData, 'Score:', calculateScore());
+    try {
+      const response = await fetch('/api/quiz-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: leadData.email,
+          company: leadData.companyName,
+          score,
+          maxScore,
+          resultTier,
+          answers: quizQuestions.map((q, i) => ({
+            question: q.text,
+            answer: answers[i] !== null ? q.options[answers[i]].label : 'Not answered',
+            points: answers[i] !== null ? q.options[answers[i]].points : 0,
+          })),
+          source: 'resilience-quiz',
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save lead');
+      }
+    } catch (error) {
+      console.error('Error submitting lead:', error);
+    }
 
     setIsSubmitting(false);
     setStage('results');

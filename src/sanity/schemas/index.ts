@@ -10,20 +10,25 @@ import { partner } from './partner'
 import { siteSettings } from './siteSettings'
 import { resource } from './resource'
 import { newsletterSubscriber, newsletterCampaign } from './newsletter'
+import { quizLead } from './quizLead'
+import { contactSubmission } from './contactSubmission'
 
 export const schemaTypes = [
-  // Documents
-  page,
+  // Content Management
   hero,
   solution,
   testimonial,
   blogPost,
-  quiz,
-  quizResult,
   teamMember,
   partner,
-  siteSettings,
   resource,
+  quiz,
+  quizResult,
+  page,
+  siteSettings,
+  // Lead Capture & Forms
+  quizLead,
+  contactSubmission,
   newsletterSubscriber,
   newsletterCampaign,
 ]
