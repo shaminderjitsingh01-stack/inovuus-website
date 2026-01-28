@@ -167,6 +167,24 @@ export default function Hero({ data }: HeroProps) {
                   </svg>
                 </motion.div>
 
+                {/* Outer rotating ring 2 - counter direction */}
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-4"
+                >
+                  <svg viewBox="0 0 400 400" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="ringGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#48C6EF" stopOpacity="0.6" />
+                        <stop offset="50%" stopColor="#64FFDA" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#48C6EF" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="200" cy="200" r="180" fill="none" stroke="url(#ringGradient2)" strokeWidth="2" strokeDasharray="40 20" />
+                  </svg>
+                </motion.div>
+
                 {/* Pulsing rings */}
                 {[0, 1, 2].map((i) => (
                   <motion.div
@@ -206,6 +224,14 @@ export default function Hero({ data }: HeroProps) {
                     />
                     <div className="absolute inset-2 rounded-full bg-gradient-to-br from-brand-navy/80 via-brand-slate/60 to-brand-navy/80 border border-brand-accent/30 backdrop-blur-sm shadow-2xl shadow-brand-accent/20">
                       <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-gradient-to-br from-white/20 to-transparent blur-sm" />
+                      {/* Grid lines on sphere */}
+                      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full opacity-30">
+                        <ellipse cx="50" cy="50" rx="40" ry="40" fill="none" stroke="#64FFDA" strokeWidth="0.5" />
+                        <ellipse cx="50" cy="50" rx="40" ry="20" fill="none" stroke="#64FFDA" strokeWidth="0.5" />
+                        <ellipse cx="50" cy="50" rx="20" ry="40" fill="none" stroke="#48C6EF" strokeWidth="0.5" />
+                        <line x1="10" y1="50" x2="90" y2="50" stroke="#64FFDA" strokeWidth="0.5" />
+                        <line x1="50" y1="10" x2="50" y2="90" stroke="#48C6EF" strokeWidth="0.5" />
+                      </svg>
                     </div>
                   </div>
                 </motion.div>
