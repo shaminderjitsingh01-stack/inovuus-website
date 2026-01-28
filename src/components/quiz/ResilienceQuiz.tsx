@@ -1,14 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Mail, Building2, ArrowRight } from 'lucide-react';
 import ProgressBar from './ProgressBar';
 import QuizQuestion, { Question } from './QuizQuestion';
 import QuizResults from './QuizResults';
 
-// Quiz questions data - hardcoded for now, will connect to Sanity later
-const quizQuestions: Question[] = [
+// Types for Sanity data
+interface SanityQuizQuestion {
+  _key: string;
+  questionText: string;
+  options: {
+    _key: string;
+    optionText: string;
+    points: number;
+  }[];
+}
+
+interface SanityQuiz {
+  _id: string;
+  title: string;
+  description: string;
+  questions: SanityQuizQuestion[];
+}
+
+interface SanityQuizResult {
+  _id: string;
+  tier: string;
+  title: string;
+  description: string;
+  minScore: number;
+  maxScore: number;
+  recommendations?: string[];
+  ctas?: { text: string; link: string; style: string }[];
+}
+
+interface ResilienceQuizProps {
+  quizData?: SanityQuiz | null;
+  resultsData?: SanityQuizResult[];
+}
+
+// Default quiz questions (fallback)
+const defaultQuizQuestions: Question[] = [
   {
     id: 1,
     text: "Are your backups 'Air-Gapped' (completely isolated from your primary network)?",
@@ -62,7 +96,22 @@ interface LeadData {
   companyName: string;
 }
 
-export default function ResilienceQuiz() {
+export default function ResilienceQuiz({ quizData, resultsData }: ResilienceQuizProps) {
+  // Convert Sanity data to component format or use defaults
+  const quizQuestions = useMemo<Question[]>(() => {
+    if (quizData?.questions?.length) {
+      return quizData.questions.map((q, index) => ({
+        id: index + 1,
+        text: q.questionText,
+        options: q.options.map(opt => ({
+          label: opt.optionText,
+          points: opt.points,
+        })),
+      }));
+    }
+    return defaultQuizQuestions;
+  }, [quizData]);
+
   const [stage, setStage] = useState<QuizStage>('intro');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(
@@ -180,14 +229,13 @@ export default function ResilienceQuiz() {
 
               <p className="text-brand-text text-lg mb-8 max-w-xl mx-auto">
                 Evaluate your organization&apos;s preparedness against ransomware attacks
-                with our quick 5-question assessment. Get personalized recommendations
-                based on your score.
+                with our quick {totalQuestions}-question assessment.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
                 <div className="flex items-center gap-2 text-brand-text">
                   <span className="w-2 h-2 rounded-full bg-brand-accent" />
-                  <span>5 Questions</span>
+                  <span>{totalQuestions} Questions</span>
                 </div>
                 <div className="flex items-center gap-2 text-brand-text">
                   <span className="w-2 h-2 rounded-full bg-brand-accent" />
@@ -338,6 +386,7 @@ export default function ResilienceQuiz() {
                 score={calculateScore()}
                 maxScore={maxScore}
                 onReset={handleReset}
+                resultsData={resultsData}
               />
             </motion.div>
           )}

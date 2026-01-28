@@ -2,11 +2,24 @@
 
 import { motion } from 'framer-motion';
 import { Shield, AlertTriangle, AlertOctagon, RotateCcw } from 'lucide-react';
+import Link from 'next/link';
+
+interface SanityQuizResult {
+  _id: string;
+  tier: string;
+  title: string;
+  description: string;
+  minScore: number;
+  maxScore: number;
+  recommendations?: string[];
+  ctas?: { text: string; link: string; style: string }[];
+}
 
 interface QuizResultsProps {
   score: number;
   maxScore: number;
   onReset: () => void;
+  resultsData?: SanityQuizResult[];
 }
 
 type ResultTier = 'resilient' | 'at-risk' | 'critical';
@@ -21,15 +34,61 @@ interface TierConfig {
   bgColor: string;
   icon: React.ReactNode;
   gaugeColor: string;
+  recommendations?: string[];
 }
 
-function getResultTier(score: number): TierConfig {
-  if (score >= 80) {
+function getResultTier(score: number, maxScore: number, resultsData?: SanityQuizResult[]): TierConfig {
+  const percentage = (score / maxScore) * 100;
+
+  // Try to find matching result from Sanity data
+  if (resultsData?.length) {
+    const matchingResult = resultsData.find(
+      r => percentage >= r.minScore && percentage <= r.maxScore
+    );
+
+    if (matchingResult) {
+      const tierColors: Record<string, { color: string; bgColor: string; gaugeColor: string; icon: React.ReactNode }> = {
+        resilient: {
+          color: 'text-green-400',
+          bgColor: 'bg-green-400/10',
+          gaugeColor: '#4ade80',
+          icon: <Shield className="w-8 h-8" />,
+        },
+        'at-risk': {
+          color: 'text-yellow-400',
+          bgColor: 'bg-yellow-400/10',
+          gaugeColor: '#facc15',
+          icon: <AlertTriangle className="w-8 h-8" />,
+        },
+        critical: {
+          color: 'text-red-400',
+          bgColor: 'bg-red-400/10',
+          gaugeColor: '#f87171',
+          icon: <AlertOctagon className="w-8 h-8" />,
+        },
+      };
+
+      const colors = tierColors[matchingResult.tier] || tierColors.critical;
+
+      return {
+        tier: matchingResult.tier as ResultTier,
+        title: matchingResult.title,
+        message: matchingResult.description,
+        ctaText: matchingResult.ctas?.[0]?.text || 'Book a Consultation',
+        ctaLink: matchingResult.ctas?.[0]?.link || 'https://calendly.com/inovuus',
+        recommendations: matchingResult.recommendations,
+        ...colors,
+      };
+    }
+  }
+
+  // Fallback to default tiers
+  if (percentage >= 80) {
     return {
       tier: 'resilient',
       title: 'Resilient',
       message:
-        'Congratulations! Your organization demonstrates strong ransomware resilience practices. Your backup strategy, recovery processes, and documentation are well-established. Continue maintaining these practices and consider optimization opportunities.',
+        'Congratulations! Your organization demonstrates strong ransomware resilience practices. Your backup strategy, recovery processes, and documentation are well-established.',
       ctaText: 'Schedule Optimization Audit',
       ctaLink: '/contact?type=audit',
       color: 'text-green-400',
@@ -37,12 +96,12 @@ function getResultTier(score: number): TierConfig {
       icon: <Shield className="w-8 h-8" />,
       gaugeColor: '#4ade80',
     };
-  } else if (score >= 40) {
+  } else if (percentage >= 40) {
     return {
       tier: 'at-risk',
       title: 'At Risk',
       message:
-        'Your organization has some resilience measures in place, but there are significant gaps that could leave you vulnerable to ransomware attacks. We recommend reviewing your backup and recovery strategies to strengthen your defenses.',
+        'Your organization has some resilience measures in place, but there are significant gaps that could leave you vulnerable to ransomware attacks.',
       ctaText: 'Download Recovery Playbook',
       ctaLink: '/resources/recovery-playbook',
       color: 'text-yellow-400',
@@ -55,7 +114,7 @@ function getResultTier(score: number): TierConfig {
       tier: 'critical',
       title: 'Critical',
       message:
-        'Your organization is at critical risk of significant damage from a ransomware attack. Immediate action is needed to implement proper backup isolation, recovery processes, and incident response planning. We strongly recommend speaking with our experts.',
+        'Your organization is at critical risk of significant damage from a ransomware attack. Immediate action is needed.',
       ctaText: 'Request Emergency Consultation',
       ctaLink: '/contact?type=emergency',
       color: 'text-red-400',
@@ -83,7 +142,6 @@ function CircularGauge({
   return (
     <div className="relative w-48 h-48">
       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-        {/* Background circle */}
         <circle
           cx="100"
           cy="100"
@@ -92,7 +150,6 @@ function CircularGauge({
           stroke="#1E3A5F"
           strokeWidth="12"
         />
-        {/* Progress circle */}
         <motion.circle
           cx="100"
           cy="100"
@@ -107,7 +164,6 @@ function CircularGauge({
           transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
         />
       </svg>
-      {/* Score text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
           className="text-4xl font-bold text-brand-text-light"
@@ -123,8 +179,8 @@ function CircularGauge({
   );
 }
 
-export default function QuizResults({ score, maxScore, onReset }: QuizResultsProps) {
-  const result = getResultTier(score);
+export default function QuizResults({ score, maxScore, onReset, resultsData }: QuizResultsProps) {
+  const result = getResultTier(score, maxScore, resultsData);
 
   return (
     <motion.div
@@ -155,22 +211,40 @@ export default function QuizResults({ score, maxScore, onReset }: QuizResultsPro
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="text-brand-text text-lg mb-10 leading-relaxed"
+        className="text-brand-text text-lg mb-6 leading-relaxed"
       >
         {result.message}
       </motion.p>
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <motion.a
-          href="https://calendly.com/inovuus"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-brand-dark bg-brand-accent hover:bg-brand-accent/90 transition-all duration-300`}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      {/* Recommendations from Sanity */}
+      {result.recommendations && result.recommendations.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="mb-8 text-left bg-brand-navy/50 rounded-lg p-6"
         >
-          Book a Consultation
-        </motion.a>
+          <h3 className="text-lg font-semibold text-white mb-3">Recommendations:</h3>
+          <ul className="space-y-2">
+            {result.recommendations.map((rec, index) => (
+              <li key={index} className="flex items-start gap-2 text-brand-text">
+                <span className="w-2 h-2 rounded-full bg-brand-accent mt-2 flex-shrink-0" />
+                {rec}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Link
+            href={result.ctaLink}
+            className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-brand-dark bg-brand-accent hover:bg-brand-accent/90 transition-all duration-300"
+          >
+            {result.ctaText}
+          </Link>
+        </motion.div>
 
         <motion.button
           onClick={onReset}
