@@ -78,7 +78,7 @@ export default function ResilienceQuiz() {
   );
 
   const calculateScore = (): number => {
-    return answers.reduce((total, answerIndex, questionIndex) => {
+    return answers.reduce<number>((total, answerIndex, questionIndex) => {
       if (answerIndex === null) return total;
       return total + quizQuestions[questionIndex].options[answerIndex].points;
     }, 0);
