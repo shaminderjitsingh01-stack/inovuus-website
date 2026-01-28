@@ -8,6 +8,8 @@ import { quizResult } from './quizResult'
 import { teamMember } from './teamMember'
 import { partner } from './partner'
 import { siteSettings } from './siteSettings'
+import { resource } from './resource'
+import { newsletterSubscriber, newsletterCampaign } from './newsletter'
 
 export const schemaTypes = [
   // Documents
@@ -21,6 +23,9 @@ export const schemaTypes = [
   teamMember,
   partner,
   siteSettings,
+  resource,
+  newsletterSubscriber,
+  newsletterCampaign,
 ]
 
 // Re-export types
