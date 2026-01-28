@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/sections/Navbar";
-import Footer from "@/components/sections/Footer";
+import FooterServer from "@/components/sections/FooterServer";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://inovuus-website.vercel.app'),
@@ -65,7 +65,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">{children}</main>
-        <Footer />
+        <FooterServer />
       </body>
     </html>
   );
